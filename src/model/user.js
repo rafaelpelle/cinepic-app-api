@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const User = mongoose.model('User', {
+const User = mongoose.model('user', {
   name: {
     type: String,
     required: true,
@@ -14,9 +14,6 @@ const User = mongoose.model('User', {
         throw new Error('The user email is invalid');
       }
     },
-  },
-  age: {
-    type: Number,
   },
 });
 

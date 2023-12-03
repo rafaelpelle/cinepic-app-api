@@ -1,14 +1,22 @@
+const { User } = require('../model');
 const { errorResponse } = require('../utils/apiResponse');
 
 async function getUser(req, res) {
   try {
     const { id } = req.params;
+    const user = await User.findById(id);
 
-    if (!id) {
-      throw new Error("Param 'id' is required");
-    }
+    res.send(user);
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+}
 
-    res.send({ name: 'Test User', id });
+async function getAllUsers(req, res) {
+  try {
+    const allUsers = await User.find();
+
+    res.send(allUsers);
   } catch (error) {
     return errorResponse(res, error);
   }
@@ -16,4 +24,5 @@ async function getUser(req, res) {
 
 module.exports = {
   getUser,
+  getAllUsers,
 };
