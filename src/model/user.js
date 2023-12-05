@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcript = require('bcryptjs');
+const { invalidCredentials, emailInvalid } = require('../constants/errors');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,7 +14,7 @@ const userSchema = new mongoose.Schema({
     },
     validate: (email) => {
       if (!validator.isEmail(email)) {
-        throw new Error('The user email is invalid');
+        throw new Error(emailInvalid);
       }
     },
   },
@@ -30,6 +31,20 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+userSchema.statics.findByCredentials = async (email, password) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new Error(invalidCredentials);
+  }
+
+  const passwordMatch = await bcript.compare(password, user.password);
+  if (!passwordMatch) {
+    throw new Error(invalidCredentials);
+  }
+
+  return user;
+};
 
 userSchema.pre('save', async function (next) {
   const user = this;
