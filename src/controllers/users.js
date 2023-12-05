@@ -47,7 +47,8 @@ async function authenticateUser(req, res) {
     }
 
     const user = await User.findByCredentials(email, password);
-    res.status(200).send(user);
+    const authToken = await user.generateAuthToken();
+    res.status(200).send({ authToken });
   } catch (error) {
     return errorResponse(res, error);
   }

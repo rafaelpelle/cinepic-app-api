@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcript = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 const { invalidCredentials, emailInvalid } = require('../constants/errors');
+
+dotenv.config();
+
+const { JWT_SECRET } = process.env;
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -30,7 +36,23 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  authTokens: [
+    {
+      authToken: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
+
+userSchema.methods.generateAuthToken = async function () {
+  const authToken = jwt.sign({ _id: this._id.toString() }, JWT_SECRET);
+  this.authTokens = [...this.authTokens, { authToken }];
+  await this.save();
+
+  return authToken;
+};
 
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
