@@ -22,6 +22,33 @@ async function authenticateUser(req, res) {
   }
 }
 
+async function logoutUser(req, res) {
+  try {
+    const { user, authToken } = req;
+    user.authTokens = user.authTokens.filter(
+      (item) => item.authToken !== authToken,
+    );
+
+    await user.save();
+    res.status(204).send();
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+}
+
+async function logoutUserAllTokens(req, res) {
+  try {
+    const { user } = req;
+    user.authTokens = [];
+    await user.save();
+    res.status(204).send();
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+}
+
 module.exports = {
   authenticateUser,
+  logoutUser,
+  logoutUserAllTokens,
 };

@@ -18,6 +18,7 @@ const authMiddleware = async (req, res, next) => {
     if (!user) throw new Error('');
 
     req.user = user;
+    req.authToken = authToken;
     next();
   } catch (e) {
     res.status(401).send({ errorMsg: 'Unauthorized' });
