@@ -4,20 +4,7 @@ const { emailRequired, passwordRequired } = require('../constants/errors');
 
 async function getUser(req, res) {
   try {
-    const { id } = req.params;
-    const user = await User.findById(id);
-
-    res.send(user);
-  } catch (error) {
-    return errorResponse(res, error);
-  }
-}
-
-async function getAllUsers(req, res) {
-  try {
-    const allUsers = await User.find();
-
-    res.send(allUsers);
+    res.send(req.user);
   } catch (error) {
     return errorResponse(res, error);
   }
@@ -56,7 +43,6 @@ async function authenticateUser(req, res) {
 
 module.exports = {
   getUser,
-  getAllUsers,
   createUser,
   authenticateUser,
 };
