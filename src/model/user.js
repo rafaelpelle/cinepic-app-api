@@ -44,6 +44,22 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  bookmarked: [
+    {
+      imdbID: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
+  alreadySeen: [
+    {
+      imdbID: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 
 userSchema.methods.toJSON = function () {
@@ -60,6 +76,26 @@ userSchema.methods.generateAuthToken = async function () {
   await this.save();
 
   return authToken;
+};
+
+userSchema.methods.addToBookmarked = async function (imdbID) {
+  this.bookmarked = [...this.bookmarked, { imdbID }];
+  await this.save();
+};
+
+userSchema.methods.removeFromBookmarked = async function (imdbID) {
+  this.bookmarked = this.bookmarked.filter((item) => item.imdbID !== imdbID);
+  await this.save();
+};
+
+userSchema.methods.addToAlreadySeen = async function (imdbID) {
+  this.alreadySeen = [...this.alreadySeen, { imdbID }];
+  await this.save();
+};
+
+userSchema.methods.removeFromAlreadySeen = async function (imdbID) {
+  this.alreadySeen = this.alreadySeen.filter((item) => item.imdbID !== imdbID);
+  await this.save();
 };
 
 userSchema.statics.findByCredentials = async (email, password) => {

@@ -5,4 +5,6 @@ module.exports = {
   passwordRequired: '"password" field is required',
   searchRequired: '"s" parameter is required',
   idRequired: '"id" parameter is required',
+  nameRequired: '"name" parameter is required',
+  birthDateRequired: '"birthDate" parameter is required',
 };

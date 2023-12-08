@@ -2,6 +2,7 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const { errorResponse } = require('../utils/apiResponse');
 const { searchRequired, idRequired } = require('../constants/errors');
+const { Movie } = require('../model');
 
 dotenv.config();
 
@@ -45,7 +46,30 @@ async function getMovieById(req, res) {
   }
 }
 
+async function addMovie(req, res) {
+  try {
+    const { movie, operation } = req.body;
+
+    const updatedMovie = await Movie.findOneAndReplace(
+      { imdbID: movie.imdbID },
+      movie,
+      { upsert: true, runValidators: true, new: true },
+    );
+
+    if (operation === 'bookmark') {
+      await req.user.addToBookmarked(movie.imdbID);
+    } else if (operation === 'alreadySeen') {
+      await req.user.addToAlreadySeen(movie.imdbID);
+    }
+
+    res.status(200).send(updatedMovie);
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+}
+
 module.exports = {
   searchMovies,
   getMovieById,
+  addMovie,
 };
