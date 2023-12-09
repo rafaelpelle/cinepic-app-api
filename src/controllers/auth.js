@@ -1,17 +1,17 @@
 const { User } = require('../model');
 const { errorResponse } = require('../utils/apiResponse');
-const { emailRequired, passwordRequired } = require('../constants/errors');
+const { REQUIRED_EMAIL, REQUIRED_PASSWORD } = require('../constants/errors');
 
 async function authenticateUser(req, res) {
   try {
     const { email, password } = req.body;
 
     if (!email) {
-      res.status(400).send(emailRequired);
+      res.status(400).send(REQUIRED_EMAIL);
     }
 
     if (!password) {
-      res.status(400).send(passwordRequired);
+      res.status(400).send(REQUIRED_PASSWORD);
     }
 
     const user = await User.findByCredentials(email, password);

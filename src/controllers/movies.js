@@ -2,10 +2,10 @@ const axios = require('axios');
 const dotenv = require('dotenv');
 const { errorResponse } = require('../utils/apiResponse');
 const {
-  searchRequired,
-  idRequired,
-  operationRequired,
-  imdbIDRequired,
+  REQUIRED_SEARCH,
+  REQUIRED_ID,
+  REQUIRED_OPERATION,
+  REQUIRED_IMDB_ID,
 } = require('../constants/errors');
 const { BOOKMARK, ALREADY_SEEN } = require('../constants/movieOps');
 const { Movie } = require('../model');
@@ -19,7 +19,7 @@ async function searchMovies(req, res) {
     const { s, type } = req.query;
 
     if (!s) {
-      throw new Error(searchRequired);
+      throw new Error(REQUIRED_SEARCH);
     }
 
     const { data } = await axios.get(
@@ -39,7 +39,7 @@ async function getMovieById(req, res) {
     const { id } = req.params;
 
     if (!id) {
-      throw new Error(idRequired);
+      throw new Error(REQUIRED_ID);
     }
 
     const { data } = await axios.get(
@@ -57,7 +57,7 @@ async function addMovie(req, res) {
     const { movie, operation } = req.body;
 
     if (operation !== BOOKMARK && operation !== ALREADY_SEEN) {
-      throw new Error(operationRequired);
+      throw new Error(REQUIRED_OPERATION);
     }
 
     const updatedMovie = await Movie.findOneAndReplace(
@@ -83,11 +83,11 @@ async function deleteMovie(req, res) {
     const { movie, operation } = req.body;
 
     if (!movie?.imdbID) {
-      throw new Error(imdbIDRequired);
+      throw new Error(REQUIRED_IMDB_ID);
     }
 
     if (operation !== BOOKMARK && operation !== ALREADY_SEEN) {
-      throw new Error(operationRequired);
+      throw new Error(REQUIRED_OPERATION);
     }
 
     if (operation === BOOKMARK) {

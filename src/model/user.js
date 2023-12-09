@@ -3,7 +3,7 @@ const validator = require('validator');
 const bcript = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
-const { invalidCredentials, emailInvalid } = require('../constants/errors');
+const { INVALID_CREDENTIALS, INVALID_EMAIL } = require('../constants/errors');
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     },
     validate: (email) => {
       if (!validator.isEmail(email)) {
-        throw new Error(emailInvalid);
+        throw new Error(INVALID_EMAIL);
       }
     },
   },
@@ -101,12 +101,12 @@ userSchema.methods.removeFromAlreadySeen = async function (imdbID) {
 userSchema.statics.findByCredentials = async (email, password) => {
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error(invalidCredentials);
+    throw new Error(INVALID_CREDENTIALS);
   }
 
   const passwordMatch = await bcript.compare(password, user.password);
   if (!passwordMatch) {
-    throw new Error(invalidCredentials);
+    throw new Error(INVALID_CREDENTIALS);
   }
 
   return user;
