@@ -5,7 +5,6 @@ const {
   REQUIRED_SEARCH,
   REQUIRED_ID,
   REQUIRED_OPERATION,
-  REQUIRED_IMDB_ID,
 } = require('../constants/errors');
 const { BOOKMARK, ALREADY_SEEN } = require('../constants/movieOps');
 const { Movie } = require('../model');
@@ -78,33 +77,8 @@ async function addMovie(req, res) {
   }
 }
 
-async function deleteMovie(req, res) {
-  try {
-    const { movie, operation } = req.body;
-
-    if (!movie?.imdbID) {
-      throw new Error(REQUIRED_IMDB_ID);
-    }
-
-    if (operation !== BOOKMARK && operation !== ALREADY_SEEN) {
-      throw new Error(REQUIRED_OPERATION);
-    }
-
-    if (operation === BOOKMARK) {
-      await req.user.removeFromBookmarked(movie.imdbID);
-    } else {
-      await req.user.removeFromAlreadySeen(movie.imdbID);
-    }
-
-    res.status(204).send();
-  } catch (error) {
-    return errorResponse(res, error);
-  }
-}
-
 module.exports = {
   searchMovies,
   getMovieById,
   addMovie,
-  deleteMovie,
 };
