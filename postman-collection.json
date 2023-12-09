@@ -1,0 +1,245 @@
+{
+	"info": {
+		"_postman_id": "c531ddc7-bfd7-4574-b2e8-0166031f1f8e",
+		"name": "cinepic-app-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "4846181"
+	},
+	"item": [
+		{
+			"name": "/users/register",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Rafael Pelle\",\n    \"email\": \"rafapelle@gmail.com\",\n    \"password\": \"password123\",\n    \"birthDate\": \"1992-10-23T00:00:00.000Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/users/register"
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code === 200) {",
+							"    pm.environment.set('authToken', pm.response.json().authToken)",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rafapelle@gmail.com\",\n    \"password\": \"password123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/logout",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/auth/logout"
+			},
+			"response": []
+		},
+		{
+			"name": "/auth/logoutAll",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/auth/logoutAll"
+			},
+			"response": []
+		},
+		{
+			"name": "/users/me",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{URL}}/api/users/me"
+			},
+			"response": []
+		},
+		{
+			"name": "/users/movies/bookmarked",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{URL}}/api/users/movies/bookmarked"
+			},
+			"response": []
+		},
+		{
+			"name": "/users/movies/alreadyseen",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{URL}}/api/users/movies/alreadyseen"
+			},
+			"response": []
+		},
+		{
+			"name": "/movies/",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/movies?s=origin",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "s",
+							"value": "origin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/movies/:id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{URL}}/api/movies/tt4361050"
+			},
+			"response": []
+		},
+		{
+			"name": "/movies",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"ALREADY_SEEN\",\n    \"movie\": {\n        \"imdbID\": \"tt4361052\",\n        \"title\": \"Ouija: Origin of Evil\",\n        \"year\": \"2016\",\n        \"country\": \"United States\",\n        \"rated\": \"PG-13\",\n        \"runtime\": \"99 min\",\n        \"genre\": \"Drama, Horror, Mystery\",\n        \"type\": \"movie\",\n        \"director\": \"Mike Flanagan\",\n        \"writer\": \"Mike Flanagan, Jeff Howard, Juliet Snowden\",\n        \"actors\": \"Elizabeth Reaser, Lulu Wilson, Annalise Basso\",\n        \"plot\": \"In 1967 Los Angeles, a widowed mother and her daughters add a new stunt to bolster their seance scam business by inviting an evil presence into their home, not realizing how dangerous it is.\",\n        \"poster\": \"https://m.media-amazon.com/images/M/MV5BMTk4NTcxNTQ5NF5BMl5BanBnXkFtZTgwNTk5OTU4OTE@._V1_SX300.jpg\",\n        \"rottenTomatoesRating\": \"84%\",\n        \"imdbRating\": \"6.2\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/movies"
+			},
+			"response": []
+		},
+		{
+			"name": "/users/movies",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"operation\": \"ALREADY_SEEN\",\n    \"movie\": {\n        \"imdbID\": \"tt4361050\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{URL}}/api/users/movies"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{authToken}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
