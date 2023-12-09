@@ -7,4 +7,6 @@ module.exports = {
   idRequired: '"id" parameter is required',
   nameRequired: '"name" parameter is required',
   birthDateRequired: '"birthDate" parameter is required',
+  operationRequired: '"operation" parameter is required',
+  imdbIDRequired: '"movie.imdbID" parameter is required',
 };

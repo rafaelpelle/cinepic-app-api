@@ -1,7 +1,13 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
 const { errorResponse } = require('../utils/apiResponse');
-const { searchRequired, idRequired } = require('../constants/errors');
+const {
+  searchRequired,
+  idRequired,
+  operationRequired,
+  imdbIDRequired,
+} = require('../constants/errors');
+const { BOOKMARK, ALREADY_SEEN } = require('../constants/movieOps');
 const { Movie } = require('../model');
 
 dotenv.config();
@@ -50,15 +56,19 @@ async function addMovie(req, res) {
   try {
     const { movie, operation } = req.body;
 
+    if (operation !== BOOKMARK && operation !== ALREADY_SEEN) {
+      throw new Error(operationRequired);
+    }
+
     const updatedMovie = await Movie.findOneAndReplace(
       { imdbID: movie.imdbID },
       movie,
       { upsert: true, runValidators: true, new: true },
     );
 
-    if (operation === 'bookmark') {
+    if (operation === BOOKMARK) {
       await req.user.addToBookmarked(movie.imdbID);
-    } else if (operation === 'alreadySeen') {
+    } else {
       await req.user.addToAlreadySeen(movie.imdbID);
     }
 
@@ -68,8 +78,33 @@ async function addMovie(req, res) {
   }
 }
 
+async function deleteMovie(req, res) {
+  try {
+    const { movie, operation } = req.body;
+
+    if (!movie?.imdbID) {
+      throw new Error(imdbIDRequired);
+    }
+
+    if (operation !== BOOKMARK && operation !== ALREADY_SEEN) {
+      throw new Error(operationRequired);
+    }
+
+    if (operation === BOOKMARK) {
+      await req.user.removeFromBookmarked(movie.imdbID);
+    } else {
+      await req.user.removeFromAlreadySeen(movie.imdbID);
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    return errorResponse(res, error);
+  }
+}
+
 module.exports = {
   searchMovies,
   getMovieById,
   addMovie,
+  deleteMovie,
 };
